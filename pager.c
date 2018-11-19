@@ -196,6 +196,7 @@ resolve_color (struct line_t *lineInfo, int n, int cnt, int flags, int special,
   int color;			/* final color */
   static int last_color;	/* last color set */
   int search = 0, m;
+  struct syntax_t *matching_chunk;
 
   if (!cnt)
     last_color = -1;		/* force attrset() */
@@ -239,37 +240,16 @@ resolve_color (struct line_t *lineInfo, int n, int cnt, int flags, int special,
   color = def_color;
   if (flags & MUTT_SHOWCOLOR)
   {
-    struct syntax_t *matching_chunk;
-
     matching_chunk = bsearch (&cnt, lineInfo[m].syntax, lineInfo[m].chunks,
                               sizeof(struct syntax_t), comp_syntax_t);
     if (matching_chunk &&
         (cnt >= matching_chunk->first) &&
         (cnt < matching_chunk->last))
       color = matching_chunk->color;
-#if 0
-    for (i = 0; i < lineInfo[m].chunks; i++)
-    {
-      /* we assume the chunks are sorted */
-      if (cnt > (lineInfo[m].syntax)[i].last)
-	continue;
-      if (cnt < (lineInfo[m].syntax)[i].first)
-	break;
-      if (cnt != (lineInfo[m].syntax)[i].last)
-      {
-	color = (lineInfo[m].syntax)[i].color;
-	break;
-      }
-      /* don't break here, as cnt might be 
-       * in the next chunk as well */
-    }
-#endif
   }
 
   if (flags & MUTT_SEARCH)
   {
-    struct syntax_t *matching_chunk;
-
     matching_chunk = bsearch (&cnt, lineInfo[m].search, lineInfo[m].search_cnt,
                               sizeof(struct syntax_t), comp_syntax_t);
     if (matching_chunk &&
@@ -279,21 +259,6 @@ resolve_color (struct line_t *lineInfo, int n, int cnt, int flags, int special,
       color = ColorDefs[MT_COLOR_SEARCH];
       search = 1;
     }
-#if 0
-    for (i = 0; i < lineInfo[m].search_cnt; i++)
-    {
-      if (cnt > (lineInfo[m].search)[i].last)
-	continue;
-      if (cnt < (lineInfo[m].search)[i].first)
-	break;
-      if (cnt != (lineInfo[m].search)[i].last)
-      {
-	color = ColorDefs[MT_COLOR_SEARCH];
-	search = 1;
-	break;
-      }
-    }
-#endif
   }
 
   /* handle "special" bold & underlined characters */
