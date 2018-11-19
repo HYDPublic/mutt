@@ -178,8 +178,8 @@ static int check_sig (const char *s, struct line_t *info, int n)
 static int
 comp_syntax_t (const void *m1, const void *m2)
 {
-  const int *cnt = (int *)m1;
-  const struct syntax_t *stx = (struct syntax_t *)m2;
+  const int *cnt = (const int *)m1;
+  const struct syntax_t *stx = (const struct syntax_t *)m2;
 
   if (*cnt < stx->first)
     return -1;
