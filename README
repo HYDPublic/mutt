@@ -1,3 +1,5 @@
+forked from https://gitlab.com/muttmua/mutt.git
+
 When updating mutt from an earlier release or from Git, please
 make sure to read the compatibility notes in ``UPDATING''.
 
